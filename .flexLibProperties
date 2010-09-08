@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" version="3">
+  <includeClasses>
+    <classEntry path="org.lcf.AbstractModule"/>
+    <classEntry path="org.lcf.Constants"/>
+    <classEntry path="org.lcf.Container"/>
+    <classEntry path="org.lcf.IContainer"/>
+    <classEntry path="org.lcf.IContainerModule"/>
+    <classEntry path="org.lcf.IEventPrefer"/>
+    <classEntry path="org.lcf.IModuleManager"/>
+    <classEntry path="org.lcf.TabNavigator"/>
+    <classEntry path="org.lcf.util.EventTransfer"/>
+    <classEntry path="org.lcf.util.ModuleEvent"/>
+    <classEntry path="org.lcf.Test1"/>
+    <classEntry path="org.lcf.ModuleInfo"/>
+    <classEntry path="org.lcf.util.Tab"/>
+    <classEntry path="org.lcf.util.TabSkin"/>
+    <classEntry path="org.lcf.EventListenerModel"/>
+    <classEntry path="org.lcf.TabNavigatorSkin"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

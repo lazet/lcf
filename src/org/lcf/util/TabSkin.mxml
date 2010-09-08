@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+    ADOBE SYSTEMS INCORPORATED
+    Copyright 2008 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file
+    in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The Spark skin class for the tabs of the MX TabNavigator container. 
+
+      @see mx.containers.TabNavigator
+        
+      @langversion 3.0
+      @playerversion Flash 10
+      @playerversion AIR 1.5
+      @productversion Flex 4
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+      minWidth="50" minHeight="25" xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Metadata>
+		[HostComponent("org.lcf.util.Tab")]
+	</fx:Metadata>
+      <fx:Script>
+          /**
+           * @private
+           */
+          override protected function initializationComplete():void
+          {
+              useChromeColor = true;
+              super.initializationComplete();
+          }
+      </fx:Script>
+
+    <!-- states -->
+    <s:states>
+        <s:State name="selected" />
+        <s:State name="idle" />
+    </s:states>
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+    <!-- layer 1: fill -->
+    <s:Rect left="1" right="1" top="1" bottom="0" >
+        <s:fill>
+            <s:LinearGradient rotation="90">
+                <s:GradientEntry color="0xE4E4E4" 
+                                color.selected="0xFFFFFF"
+                               alpha="1" />
+                <s:GradientEntry color="0xA1A1A1"
+                                color.selected="0xE4E4E4" 
+                               alpha="1" />
+            </s:LinearGradient>
+        </s:fill>
+    </s:Rect>
+    
+    <!-- layer 2: highlight stroke -->
+    <s:Rect left="1" right="1" top="1" bottom="1" alpha=".22" >
+        <s:stroke>
+            <s:LinearGradientStroke rotation="90">
+                <s:GradientEntry color="0xFFFFFF" alpha="1" />
+                <s:GradientEntry color="0xD8D8D8" alpha="1" />
+            </s:LinearGradientStroke>
+        </s:stroke>
+    </s:Rect>
+    
+    
+    <!-- layer 4: border - unselected only -->
+    <s:Rect left="0" right="0" top="0" bottom="0" excludeFrom="selected" >
+        <s:stroke>
+            <s:SolidColorStroke color="0x696969" alpha="1" />
+        </s:stroke>
+    </s:Rect>
+    
+    <!-- layer 5: border - selected only -->
+    <s:Rect left="0" width="1" top="0" bottom="0" includeIn="selected" >
+        <s:fill>
+            <s:SolidColor color="0x696969" alpha="1" />
+        </s:fill>
+    </s:Rect>
+    <s:Rect left="1" right="1" top="0" height="1" includeIn="selected" >
+        <s:fill>
+            <s:SolidColor color="0x696969" alpha="1" />
+        </s:fill>
+    </s:Rect>
+    <s:Rect width="1" right="0" top="0" bottom="0" includeIn="selected" >
+        <s:fill>
+            <s:SolidColor color="0x696969" alpha="1" />
+        </s:fill>
+    </s:Rect>
+	<s:Group  top="2" bottom="2" left="2" right="2" >
+		<s:layout>
+			<s:HorizontalLayout  gap="1" verticalAlign="middle" />
+		</s:layout>
+		<mx:Image id="icon" source="assets/Dog.JPG" width="16" height="16"/>
+		<s:Label id="title" minWidth="30" text="444444" fontSize="14"/>
+		<mx:Spacer width="100%"/>	
+		<s:Button id="closeButton" right="1" width="12" height="12" skinClass="org.lcf.util.CloseButtonSkin" toolTip="close"/>
+	</s:Group>	
+</s:SparkSkin>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+ADOBE SYSTEMS INCORPORATED
+Copyright 2008 Adobe Systems Incorporated
+All Rights Reserved.
+
+NOTICE: Adobe permits you to use, modify, and distribute this file
+in accordance with the terms of the license agreement accompanying it.
+
+--> 
+<!--- The default skin class for the Spark ComboBox component. 
+The skin for the anchor button for a ComboBox component 
+is defined by the ComboBoxButtonSkin class.  The skin for the text input
+is defined by the ComboBoxTextInputSkin class.
+
+@see spark.components.ComboBox        
+@see spark.skins.spark.ComboBoxButtonSkin
+
+@langversion 3.0
+@playerversion Flash 10
+@playerversion AIR 1.5
+@productversion Flex 4
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+        xmlns:fb="http://ns.adobe.com/flashbuilder/2009" xmlns:mx="library://ns.adobe.com/flex/mx"> 
+    <fx:Metadata>[HostComponent("org.lcf.TabNavigator")]</fx:Metadata>
+    
+    <!-- host component -->
+    <fx:Script fb:purpose="styling">
+        <![CDATA[       
+            private var paddingChanged:Boolean;
+            private var cornerRadiusChanged:Boolean;
+            private var cornerRadius:Number = 0;            
+            
+            /* Define the content fill items that should be colored by the "contentBackgroundColor" style. */
+            static private const contentFill:Array = ["bgFill"];
+            
+            /**
+             * @private
+             */
+            override public function get contentItems():Array {return contentFill};
+
+            /**
+             *  @private
+             */
+            override protected function commitProperties():void
+            {
+                super.commitProperties();
+                
+                if (cornerRadiusChanged)
+                {
+                    cornerRadiusChanged = false;
+                    
+                }
+            }
+            
+            /**
+             *  @private
+             */
+            override public function styleChanged(styleProp:String):void
+            {
+                var allStyles:Boolean = !styleProp || styleProp == "styleName";
+                
+                super.styleChanged(styleProp);
+                
+                if (allStyles || styleProp.indexOf("padding") == 0)
+                {
+                    paddingChanged = true;
+                    invalidateProperties();
+                }
+                if (allStyles || styleProp == "cornerRadius")
+                {
+                    cornerRadiusChanged = true;
+                    invalidateProperties();
+                }                
+            }
+            
+            /**
+             * @private
+             */
+            override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+            {
+                if (getStyle("borderVisible") == false)
+                {
+                    if (background)
+                    {
+                        background.left = background.top = background.right = background.bottom = 0;
+                    }
+                }
+                else
+                {
+                    if (background)
+                    {
+                        background.left = background.top = background.right = background.bottom = 1;
+                    }
+                }
+                
+                if (dropShadow)
+                    dropShadow.visible = getStyle("dropShadowVisible");
+                
+
+                super.updateDisplayList(unscaledWidth, unscaledHeight);
+            }
+        ]]>
+    </fx:Script>
+    
+    <s:states>
+        <s:State name="normal" />
+        <s:State name="open" />
+    </s:states>
+	<!-- layer 5: border - selected only -->
+	<s:Rect left="0" width="1" top="0" bottom="0" includeIn="normal,open" >
+		<s:fill>
+			<s:SolidColor color="0x696969" alpha="1" />
+		</s:fill>
+	</s:Rect>
+	<s:Rect left="1" right="1" top="0" height="1" includeIn="normal,open" >
+		<s:fill>
+			<s:SolidColor color="0x696969" alpha="1" />
+		</s:fill>
+	</s:Rect>
+	<s:Rect width="1" right="0" top="0" bottom="0" includeIn="normal,open" >
+		<s:fill>
+			<s:SolidColor color="0x696969" alpha="1" />
+		</s:fill>
+	</s:Rect>
+	<s:Rect height="1" right="0" left="0" bottom="0" includeIn="normal,open" >
+		<s:fill>
+			<s:SolidColor color="0x696969" alpha="1" />
+		</s:fill>
+	</s:Rect>
+    <!--- 
+        The PopUpAnchor control that opens the drop-down list. 
+        
+        <p>In a custom skin class that uses transitions, set the 
+        <code>itemDestructionPolicy</code> property to <code>none</code>.</p>
+    -->
+    <s:PopUpAnchor id="popUp"  displayPopUp.normal="false" displayPopUp.open="true" includeIn="open"
+                    right="0" top="3" minHeight="22" minWidth="100" maxWidth="200" itemDestructionPolicy="auto"
+                   popUpPosition="below" popUpWidthMatchesAnchorWidth="true">
+        
+        <!--- 
+            This includes borders, background colors, scrollers, and filters. 
+            @copy spark.components.supportClasses.DropDownListBase#dropDown
+        -->
+        <s:Group id="dropDown" maxHeight="134" minHeight="22" >
+            
+            <!-- drop shadow -->
+            <!--- @private -->
+            <s:RectangularDropShadow id="dropShadow" blurX="20" blurY="20" alpha="0.45" distance="7" 
+                                     angle="90" color="#000000" left="0" top="0" right="0" bottom="0"/>
+            
+
+            
+            <!-- fill -->
+            <!--- Defines the appearance of drop-down list's background fill. -->
+            <s:Rect id="background" left="1" right="1" top="1" bottom="1" >
+                <s:fill>
+                    <!---  
+                        @private
+                        The color of the drop down's background fill.
+                        The default color is 0xFFFFFF.
+                    -->
+                    <s:SolidColor id="bgFill" color="0xFFFFFF" />
+                </s:fill>
+            </s:Rect>
+            
+            <!--- @copy spark.components.SkinnableDataContainer#dataGroup-->
+            <s:List id="selectableList" right="0" width="100%">
+				<s:layout>
+					<s:VerticalLayout gap="0" horizontalAlign="contentJustify"/>
+				</s:layout>
+				<s:itemRenderer>
+					<fx:Component>
+						<s:ItemRenderer>
+							<s:Label text="{data.@label}" color="blue" fontSize="14" />
+						</s:ItemRenderer>
+					</fx:Component>
+				</s:itemRenderer>
+
+            </s:List> 
+
+        </s:Group>
+    </s:PopUpAnchor>
+	<s:Group left="0" right="0" top="0" bottom="0">
+	    <s:layout>
+			<s:VerticalLayout/>
+		</s:layout>
+		<s:HGroup height="25" width="100%">
+			<s:HGroup verticalAlign="middle">
+				<s:HGroup id="tabs" gap="1" minWidth="0" width="100%" height="100%"/>
+				
+				<s:Button id="addButton" width="16" height="16"  focusEnabled="false"
+						  skinClass="org.lcf.util.AddButtonSkin" /> 
+			</s:HGroup>
+			<mx:Spacer width="100%"/>
+			<s:Button id="switchButton" width="19" height="100%" focusEnabled="false"
+					  skinClass="spark.skins.spark.ComboBoxButtonSkin" />  	
+		</s:HGroup>
+		<s:VGroup id="content" width="100%" height="100%">
+			
+		</s:VGroup>
+	</s:Group>
+</s:SparkSkin>
+
