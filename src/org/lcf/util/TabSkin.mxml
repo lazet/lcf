@@ -92,13 +92,13 @@
             <s:SolidColor color="0x696969" alpha="1" />
         </s:fill>
     </s:Rect>
-	<s:Group  top="2" bottom="2" left="2" right="2" >
+	<s:Group  top="2" bottom="2" left="2" right="2" minWidth="10" >
 		<s:layout>
 			<s:HorizontalLayout  gap="1" verticalAlign="middle" />
 		</s:layout>
-		<mx:Image id="icon" source="assets/Dog.JPG" width="16" height="16"/>
-		<s:Label id="title" minWidth="30" text="444444" fontSize="14"/>
-		<mx:Spacer width="100%"/>	
+		<mx:Image id="iconImage" source="assets/Dog.JPG" width="16" height="16"/>
+		<s:Label id="title" minWidth="30" text="" fontSize="14"/>
+		<s:Label id="blank" width="100%" alpha="0"/>	
 		<s:Button id="closeButton" right="1" width="12" height="12" skinClass="org.lcf.util.CloseButtonSkin" toolTip="close"/>
 	</s:Group>	
 </s:SparkSkin>

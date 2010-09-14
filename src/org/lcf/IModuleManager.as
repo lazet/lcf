@@ -52,7 +52,7 @@ package org.lcf
 		 */ 
 		function forward():Boolean;
 		
-		function unload():Boolean;
+		function unloadAll():Boolean;
 		/**
 		 * 获取当前模块,没有时，返回null
 		 * 返回对象的属性:moduleId, moduleName, moduleObject,position

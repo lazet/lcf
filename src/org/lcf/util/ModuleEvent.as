@@ -2,8 +2,6 @@ package org.lcf.util
 {
 	import flash.events.Event;
 	
-	import org.osmf.layout.AbsoluteLayoutFacet;
-	
 	public class ModuleEvent extends Event
 	{
 		public var moduleId:String;
@@ -16,7 +14,9 @@ package org.lcf.util
 		
 		public var reloadable:Boolean;
 		
-		public function ModuleEvent(type:String,moduleId:String,moduleName:String = null, moduleInfo:String = null,closable:Boolean = true, reloadable:Boolean = true,  bubbles:Boolean=false, cancelable:Boolean=false)
+		public var icon:String;
+		
+		public function ModuleEvent(type:String,moduleId:String,moduleName:String = null, moduleInfo:String = null,closable:Boolean = true, reloadable:Boolean = true,  bubbles:Boolean=false, cancelable:Boolean=false,icon:String = null)
 		{
 			super(type, bubbles, cancelable);
 			this.moduleId = moduleId;
@@ -24,6 +24,7 @@ package org.lcf.util
 			this.moduleInfo = moduleInfo;
 			this.closable = closable;
 			this.reloadable = reloadable;
+			this.icon = icon;
 		}
 	}
 }

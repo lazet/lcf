@@ -5,7 +5,6 @@
     <classEntry path="org.lcf.Constants"/>
     <classEntry path="org.lcf.Container"/>
     <classEntry path="org.lcf.IContainer"/>
-    <classEntry path="org.lcf.IContainerModule"/>
     <classEntry path="org.lcf.IEventPrefer"/>
     <classEntry path="org.lcf.IModuleManager"/>
     <classEntry path="org.lcf.TabNavigator"/>
@@ -17,6 +16,8 @@
     <classEntry path="org.lcf.util.TabSkin"/>
     <classEntry path="org.lcf.EventListenerModel"/>
     <classEntry path="org.lcf.TabNavigatorSkin"/>
+    <classEntry path="org.lcf.util.EventDispatcher"/>
+    <classEntry path="org.lcf.util.GeneralBundleEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -7,11 +7,11 @@ package org.lcf
 	 */
 	public interface IModule
 	{
-		/**
-		 * 注册父容器
-		 */        
-		function set parentCenter(parentCenter:IContainer):void;
 		
+		/**
+		 *	获得容器
+		 */        
+		function get container():IContainer;
 		/**
 		 * 定义可以接收从父容器传入的事件集合;这个方法要由子类覆盖
 		 * 返回集合是事件类型，事件class的集合['checkAccount']

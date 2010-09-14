@@ -1,9 +1,12 @@
 package org.lcf.util
 {
 	
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	
 	import mx.controls.Image;
+	import mx.controls.Spacer;
+	import mx.core.IVisualElement;
 	import mx.skins.spark.ButtonBarFirstButtonSkin;
 	
 	import org.lcf.Constants;
@@ -23,6 +26,7 @@ package org.lcf.util
 	public class Tab extends SkinnableComponent implements IEventPrefer
 	{
 		public var closable:Boolean;
+		public var moduleObject:IVisualElement;
 		
 		[Inject(name="container")]
 		public function set container(c:IContainer):void{
@@ -33,21 +37,25 @@ package org.lcf.util
 		public var closeButton:Button;
 		[SkinPart(required="true")]
 		public var title:Label;
-		[Binding]
+		[SkinPart(required="true")]
+		public var blank:Label;
 		public var iconSource:String;
+		[SkinPart(required="true")]
+		public var iconImage:Image;
 		
-		public var icon:Image;
+		public var selected:Boolean = false;
 		
-		public var selected:Boolean = true;
-		
-		public function Tab(id:String, name:String,iconSoucre:String,closable:Boolean)
+		public function Tab(id:String, name:String,moduleObject:IVisualElement,iconSoucre:String,closable:Boolean)
 		{
 			super();
 			this.id = id;
 			this.name = name;
+			this.moduleObject = moduleObject;
 			this.iconSource= iconSoucre;
 			this.closable = closable;
 			this.setStyle("skinClass",TabSkin);
+
+			this.addEventListener(KeyboardEvent.KEY_UP,onKeyBoardEvent);
 		}
 		override protected function partAdded(partName:String, instance:Object):void
 		{
@@ -56,6 +64,7 @@ package org.lcf.util
 			if (instance == closeButton)
 			{
 				if(this.closable == false){
+					this.closeButton.width = 0;
 					this.closeButton.visible=false;
 				}
 				closeButton.addEventListener(MouseEvent.CLICK, onClose);
@@ -70,13 +79,16 @@ package org.lcf.util
 					this.title.text = name;
 				this.title.toolTip = name;
 			}
-			if (instance == icon)
+			if( instance == blank)
 			{
-				icon.addEventListener(MouseEvent.CLICK,onClick);
+				blank.addEventListener(MouseEvent.CLICK, onClose);
+			}
+			if (instance == iconImage)
+			{
+				iconImage.addEventListener(MouseEvent.CLICK,onClick);
 				if( iconSource != null){
-					this.icon.source  = this.iconSource;	
+					this.iconImage.source  = this.iconSource;	
 				}
-				
 			}	
 			
 		}
@@ -93,9 +105,13 @@ package org.lcf.util
 			{
 				title.removeEventListener(MouseEvent.CLICK, onClick);
 			}
-			if (instance == icon)
+			if( instance == blank)
 			{
-				icon.removeEventListener(MouseEvent.CLICK,onClick);
+				blank.removeEventListener(MouseEvent.CLICK, onClose);
+			}
+			if (instance == iconImage)
+			{
+				iconImage.removeEventListener(MouseEvent.CLICK,onClick);
 			}	
 		}
 		
@@ -115,6 +131,7 @@ package org.lcf.util
 			return [selectElm];
 		}
 		function checkSelectEvent(e:ModuleEvent):void{
+			
 			if(e.moduleId != this.id){
 				this.selected = false;
 			}
@@ -131,6 +148,9 @@ package org.lcf.util
 			}
 			
 			return "idle";
+		}
+		public function onKeyBoardEvent(e:KeyboardEvent){
+			this.c.dispatch(e);
 		}
 	}
 }
