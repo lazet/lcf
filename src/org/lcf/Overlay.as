@@ -33,7 +33,6 @@ package org.lcf
 	import org.lcf.IModule;
 	import org.lcf.util.EventTransfer;
 	import org.lcf.util.ModuleEvent;
-	import org.lcf.util.Tab;
 	
 	import spark.components.Button;
 	import spark.components.DropDownList;
@@ -41,52 +40,27 @@ package org.lcf
 	import spark.components.List;
 	import spark.components.VGroup;
 	import spark.components.supportClasses.SkinnableComponent;
-	import spark.events.DropDownEvent;
-	import spark.events.IndexChangeEvent;
 	
-	[SkinState("open")]
-	[SkinState("normal")]
 	/**
-	 * 页签导航
+	 * 页面覆盖方式的导航
 	 */ 
-	public class TabNavigator extends SkinnableComponent implements IModuleManager,IEventPrefer,IModule
+	public class Overlay extends SkinnableComponent implements IModuleManager,IEventPrefer,IModule
 	{	
 		protected var pointer:int = -1;
 		
 		protected var hiddenTabs:Array = new Array();
-
-		protected var tabIndexMap:Dictionary = new Dictionary();
 		
 		protected var c:IContainer;
 		
-		
-		/*****图形元素****/
-		[SkinPart(required="true")]
-		public var tabs:HGroup;
-		[SkinPart(required="true")]
-		public var switchButton:Button;
 		[SkinPart(required="true")]
 		public var content:VGroup;
-		[SkinPart(required="true")]
-		public var selectableList:List;
-		public var switching:Boolean;
-		[SkinPart(required="true")]
-		public var addButton:Button;
-		public var addEnable:Boolean=false;
-		public var addFunction:Function;
-		//display tab navagetor bar
-		public var tabBarVisible:Boolean=true;
-		[SkinPart(required="true")]
-		public var tabBar:HGroup;
 		
-		private var tabNumber:int = 6;
-		public function TabNavigator()
+		public function Overlay()
 		{
 			super();
 			c = new Container();
-			this.setStyle("skinClass",TabNavigatorSkin);
-			c.put(Constants.TAB_NAVIGATOR,this);
-			this.addEventListener(FlexEvent.CREATION_COMPLETE ,onResize);
+			this.setStyle("skinClass",OverlaySkin);
+			c.put(Constants.OVERLAY,this);
 		}
 		
 		public function open(moduleId:String, moduleName:String, moduleInfo:Object, icon:String=null, reload:Boolean=false, closable:Boolean=true):Boolean
@@ -146,30 +120,16 @@ package org.lcf
 		{
 			if(this.c.get(moduleId) == null)
 				return false;
-			var currentModule:Tab;
+			var currentModule:ModuleInfo;
 			if(pointer >= 0){
-				currentModule = this.tabs.getElementAt(this.pointer) as Tab;
+				currentModule = this.hiddenTabs[this.pointer] as ModuleInfo;
 			}
-			var oldDisplaySite:int = this.tabIndexMap[moduleId];
+			var tab:ModuleInfo = c.get(moduleId) as ModuleInfo;
+			var oldDisplaySite:int = tab.position;
 			//判断相对位置,如果大于0则在当前位置后面，如果小于0则在当前位置前面，等于0代表是当前的
 			var compareSite:int = ( oldDisplaySite - this.pointer );
-			//删除并平移，先判断在当前图元上是否存在,如果存在，则取出并删除
-			var tab:Tab = c.get(moduleId) as Tab;
-			if(oldDisplaySite < this.tabNumber){
-				this.tabs.removeElementAt(oldDisplaySite);
-			}
-			else{
-				this.hiddenTabs.splice(oldDisplaySite - this.tabNumber,1);
-			}
-		
-			//如果当前的Tab容器元素个数不足this.tabNumber个，则补充1个Tab
-			if(this.tabs.numElements < this.tabNumber && this.hiddenTabs.length > 0){
-				//补充第一个没放进去的
-				this.tabs.addElement(this.hiddenTabs[0]);
-				this.hiddenTabs.splice(0,1);
 
-			}
-			delete this.tabIndexMap[moduleId];
+			this.hiddenTabs.splice(oldDisplaySite,1);
 			this.refreshSite();
 			
 			//判断关闭的页签是否是当前页签之前的
@@ -177,7 +137,6 @@ package org.lcf
 				this.pointer --;
 			}
 			
-			//从Tab容器中删除图形对象
 			c.remove(moduleId);
 			//判断是否是真正的模块（继承于IModule)，如果是，则关闭之
 			var mo:Object = tab.moduleObject;
@@ -195,24 +154,20 @@ package org.lcf
 				//删除内容
 				this.content.removeAllElements();
 				//切换页签
-				if(this.tabs.numElements > 0){
-					if(this.tabs.numElements > oldDisplaySite && oldDisplaySite >= 0){
-						var t:Tab = this.tabs.getElementAt(oldDisplaySite) as Tab;
+				if(this.hiddenTabs.length > 0){
+					if(this.hiddenTabs.length > oldDisplaySite && oldDisplaySite >= 0){
+						var t:ModuleInfo = this.hiddenTabs[oldDisplaySite] as ModuleInfo;
 						currentModule = t;
-						currentModule.selected = true;
-						currentModule.invalidateSkinState();
 						this.content.addElement(t.moduleObject);
 					}
 					else{
-						var k:Tab = this.tabs.getElementAt(this.tabs.numElements -1) as Tab;
+						var k:ModuleInfo = this.hiddenTabs[this.hiddenTabs.length -1] as ModuleInfo;
 						currentModule = k;
-						currentModule.selected = true;
-						currentModule.invalidateSkinState();
 						this.content.addElement(k.moduleObject);
-						this.pointer = this.tabs.numElements -1;
+						this.pointer = this.hiddenTabs.length -1;
 					}
 					this.content.setFocus();
-					this.c.dispatch(new org.lcf.util.ModuleEvent(Constants.MODULE_SELECTED_EVENT,currentModule.id));
+					this.c.dispatch(new org.lcf.util.ModuleEvent(Constants.MODULE_SELECTED_EVENT,currentModule.moduleId));
 				}
 				else{
 					this.pointer = -1;
@@ -231,10 +186,10 @@ package org.lcf
 		{
 			var closing:Array = new Array();
 			//循环关闭其他所有链接（不可以关闭的，不关）
-			for(var key:String in this.tabIndexMap){
-				var o:Tab = this.c.get(key) as Tab;
-				if(o.id != moduleId && o.closable == true){
-					closing.push(o.id);
+			for(var j:int = 0; j < this.hiddenTabs.length;j++){
+				var o:ModuleInfo = this.hiddenTabs[j] as ModuleInfo;
+				if(o.moduleId != moduleId && o.closable == true){
+					closing.push(o.moduleId);
 				}
 			}
 			for(var i:int = 0; i< closing.length;i++){
@@ -248,10 +203,10 @@ package org.lcf
 			//循环关闭所有链接（不可以关闭的，不关）
 
 			var closing:Array = new Array();
-			for(var key:String in this.tabIndexMap){
-				var o:Tab = this.c.get(key) as Tab;
+			for(var j:int = 0; j < this.hiddenTabs.length;j++){
+				var o:ModuleInfo = this.hiddenTabs[j] as ModuleInfo;
 				if(o.closable == true){
-					closing.push(o.id);
+					closing.push(o.moduleId);
 				}
 			}
 			for(var i:int = 0; i< closing.length;i++){
@@ -266,9 +221,9 @@ package org.lcf
 			var result:String = new String();
 			result += '<result>';
 			
-			for(var key:String in this.tabIndexMap){
-				var o:Tab = this.c.get(key) as Tab;
-				result += ('<module id="' + o.id + '" label="' + o.name  + '" position="'+ this.tabIndexMap[key] + '"/>');
+			for(var j:int = 0; j < this.hiddenTabs.length;j++){
+				var o:ModuleInfo = this.hiddenTabs[j] as ModuleInfo;
+				result += ('<module id="' + o.moduleId + '" label="' + o.moduleName  + '" position="'+ j + '"/>');
 			}
 			result += '</result>';
 			return new XML(result);
@@ -277,32 +232,13 @@ package org.lcf
 		
 		public function switchTo(moduleId:String):Boolean
 		{
-			var tab:Tab = c.get(moduleId) as Tab;
+			var tab:ModuleInfo = c.get(moduleId) as ModuleInfo;
 			if(tab != null){
-				var site:int = this.tabIndexMap[moduleId];
+				var site:int = tab.position;
 
 				if(this.pointer == site)
-					return true;
+					return true;			
 				
-				if(site >= this.tabNumber){
-					
-					if(this.tabs.numElements  == this.tabNumber){
-						var secondTab:Tab = this.tabs.getElementAt(1) as Tab;
-						secondTab.selected = false;
-						this.hiddenTabs.push(secondTab);
-						this.tabs.removeElementAt(1);
-					}
-					this.tabs.addElement(tab);
-					if(site != 99){
-						this.hiddenTabs.splice(site - this.tabNumber,1);
-					}
-					
-					site = this.tabs.numElements -1;
-					this.tabs.invalidateDisplayList();
-					
-				}
-				
-				this.refreshSite();
 				this.pointer = site;
 				//发送事件，选中此组件
 				this.c.dispatch(new org.lcf.util.ModuleEvent(Constants.MODULE_SELECTED_EVENT,moduleId));
@@ -313,8 +249,6 @@ package org.lcf
 				this.content.setFocus();
 				this.invalidateDisplayList();
 				
-				//如果状态不是normal则关闭
-				closeSwitchList();
 				return true;
 			}
 			else{
@@ -322,15 +256,9 @@ package org.lcf
 			}
 		}
 		protected function refreshSite():void{
-			
-			//this.tabIndexMap = new Dictionary();
-			for(var i:int = 0;i < this.tabs.numElements;i++){
-				var t:Tab = this.tabs.getElementAt(i) as Tab;
-				this.tabIndexMap[t.id] = i;
-			}
 			for(var j:int = 0; j < this.hiddenTabs.length;j++){
-				var k:Tab = this.hiddenTabs[j] as Tab;
-				this.tabIndexMap[k.id] = j + this.tabNumber;
+				var k:ModuleInfo = this.hiddenTabs[j] as ModuleInfo;
+				k.position = j;
 			}
 
 		}
@@ -340,9 +268,9 @@ package org.lcf
 				return null;
 			}
 			else{
-				var t:Tab = this.tabs.getElementAt(this.pointer) as Tab;
-				var mi:ModuleInfo = new ModuleInfo(t.id,t.name,t.moduleObject,t.iconSource,t.closable,this.pointer);
-				return mi;
+				var t:ModuleInfo = hiddenTabs[this.pointer] as ModuleInfo;
+				t.position = this.pointer;
+				return t;
 			}
 		}
 		public function get currentPosition():int
@@ -353,18 +281,17 @@ package org.lcf
 		
 		public function back():Boolean
 		{
-			if ( this.pointer > 0 && this.tabs.numElements > 0) {
-				return this.switchTo((this.tabs.getElementAt(this.pointer - 1) as Tab).id);
+			if ( this.pointer > 0 && this.hiddenTabs.length > 0) {
+				return this.switchTo((this.hiddenTabs[this.pointer - 1] as ModuleInfo).moduleId);
 			}
 			else{	
 				return false;
 			}
 		}
 		public function moduleInfo(moduleId:String):ModuleInfo{
-			var t:Tab = this.c.get(moduleId) as Tab;
+			var t:ModuleInfo = this.c.get(moduleId) as ModuleInfo;
 			if( t!= null){
-				var mi:ModuleInfo = new ModuleInfo(t.id,t.name,t.moduleObject,t.iconSource,t.closable,this.tabIndexMap[moduleId]);
-				return mi;
+				return t;
 			}
 			else{
 				return null;
@@ -372,11 +299,8 @@ package org.lcf
 		}
 		public function forward():Boolean
 		{
-			if ( this.pointer >= 0 && this.pointer < this.tabs.numElements -1) {
-				return this.switchTo((this.tabs.getElementAt(this.pointer + 1) as Tab).id);
-			}
-			else if ( this.pointer == this.tabs.numElements -1 && this.hiddenTabs.length > 0){
-				return this.switchTo((this.hiddenTabs[0] as Tab).id);
+			if ( this.pointer >= 0 && this.pointer < this.hiddenTabs.length -1) {
+				return this.switchTo((this.hiddenTabs[this.pointer + 1] as ModuleInfo).moduleId);
 			}
 			else{	
 				return false;
@@ -385,7 +309,6 @@ package org.lcf
 		public function unloadAll():Boolean{
 			this.closeAll();
 			this.c.close();
-			this.tabIndexMap = null;
 			this.hiddenTabs = null;
 			return true;
 		}
@@ -421,7 +344,7 @@ package org.lcf
 			return null;
 		}
 		protected function add(moduleId:String,moduleName:String, mo:IVisualElement,icon:String,closable:Boolean):void {
-			var o:Tab = new Tab(moduleId,moduleName,mo,icon,closable);
+			var o:ModuleInfo = new ModuleInfo(moduleId,moduleName,mo,icon,closable);
 			
 			if(mo is IModule){
 				var module:IModule = mo as IModule;
@@ -442,8 +365,10 @@ package org.lcf
 				var outEventTransfer:EventTransfer = new EventTransfer("to."  + Constants.TAB_NAVIGATOR + ".outEventTransfer" ,module.transferOutEvents, module.container, this.c);
 				module.container.put("to."  + Constants.TAB_NAVIGATOR + ".outEventTransfer", outEventTransfer);
 			}
+			
+			o.position = this.hiddenTabs.length;
+			this.hiddenTabs.push(o);
 			this.c.put(moduleId,o);
-			this.tabIndexMap[moduleId] = 99;
 					
 			this.switchTo(moduleId);
 		}
@@ -502,87 +427,18 @@ package org.lcf
 		}
 		/***************************************/
 		override protected function partAdded(partName:String, instance:Object):void{
-			if(instance == this.switchButton){
-				
-				this.switchButton.addEventListener(MouseEvent.CLICK, onSwitch);				
-			}
-			else if(instance == this.selectableList){
-				this.selectableList.dataProvider = new XMLListCollection(this.list().children());
-				this.selectableList.selectedIndex = -1;
-				this.selectableList.addEventListener(spark.events.IndexChangeEvent.CHANGE,onSelectTab);
-			}
-			else if(instance == this.tabs){
-				this.tabs.addEventListener(MouseEvent.CLICK, closeSwitchList);
-			}
-			else if(instance == this.content){
-				this.content.addEventListener(MouseEvent.CLICK, closeSwitchList);
+			if(instance == this.content){
 				this.content.focusEnabled;
 				this.content.addEventListener(KeyboardEvent.KEY_UP,this.onKeyBoardEvent);
 
 			}
-			else if(instance == this.addButton){
-				if(this.addEnable == false){
-					this.addButton.visible= false;
-				}
-				if(this.addFunction != null){
-					this.addButton.addEventListener(MouseEvent.CLICK, onAdd);
-				}
-			}
 		}
 		override protected function partRemoved(partName:String, instance:Object):void{
-			if(instance == this.switchButton){
-				this.switchButton.removeEventListener(MouseEvent.CLICK, onSwitch);				
-			}
-			else if(instance == this.selectableList){
-				this.selectableList.removeEventListener(spark.events.IndexChangeEvent.CHANGE,onSelectTab);
-			}
-			else if(instance == this.tabs){
-				this.tabs.removeEventListener(MouseEvent.CLICK, closeSwitchList);
-			}
-			else if(instance == this.content){
-				this.content.removeEventListener(MouseEvent.CLICK, closeSwitchList);
+			if(instance == this.content){
 				this.content.removeEventListener(KeyboardEvent.KEY_UP,this.onKeyBoardEvent);
 			}
-			else if(instance == this.addButton){
-				if(this.addFunction != null){
-					this.addButton.removeEventListener(MouseEvent.CLICK, onAdd);
-				}
-			}
 		}
-		override protected function getCurrentSkinState():String{
-			if(this.switching){
-				return "open";
-			}
-			return "normal";
-		}
-		public function onSwitch(e:MouseEvent):void{
-			this.switching = !this.switching;
-			this.invalidateSkinState();
-		}
-		public function onAdd(e:MouseEvent):void{
-			this.addFunction();
-		}
-		public function closeSwitchList(e:Event = null):void{
-			if(this.switching){
-				this.switching = false;
-				this.invalidateSkinState();
-			}
-		}
-		public function onSelectTab(e:IndexChangeEvent):void{
-			var currentDataItem:Object = e.currentTarget.selectedItem;
-			var moduleId:String = currentDataItem.@id;
-			this.switchTo(moduleId);	
-		}
-		public function onResize(e:FlexEvent):void{
-			if(this.width > 0)
-				this.tabNumber = Math.floor((this.width-80)/80);
-			
-			if(this.tabNumber < 2)
-				this.tabNumber = 2;
-			else if (this.tabNumber > 20){
-				this.tabNumber = 20
-			}
-		}
+
 		public function onKeyBoardEvent(e:KeyboardEvent):void{
 			if(e.target != this.content){
 				return;

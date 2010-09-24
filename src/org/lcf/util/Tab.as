@@ -1,3 +1,9 @@
+/*
+* Copyright (c) 2010 lizhnatao(lizhantao@gmail.com)
+* 
+* Permission is hereby granted to use, modify, and distribute this file 
+* in accordance with the terms of the license agreement accompanying it.
+*/
 package org.lcf.util
 {
 	
@@ -118,7 +124,7 @@ package org.lcf.util
 		public function onClick(e:MouseEvent):void{
 			this.c.dispatch(new ModuleEvent(Constants.SELECT_MODULE_EVENT,this.id));
 		}
-		public function onClose(e:MouseEvent){
+		public function onClose(e:MouseEvent):void{
 			this.c.dispatch(new ModuleEvent(Constants.CLOSE_MODULE_EVENT,this.id));
 		}
 		/**
@@ -130,7 +136,7 @@ package org.lcf.util
 			var selectElm:EventListenerModel = new EventListenerModel(Constants.MODULE_SELECTED_EVENT,checkSelectEvent);
 			return [selectElm];
 		}
-		function checkSelectEvent(e:ModuleEvent):void{
+		protected function checkSelectEvent(e:ModuleEvent):void{
 			
 			if(e.moduleId != this.id){
 				this.selected = false;
@@ -149,7 +155,7 @@ package org.lcf.util
 			
 			return "idle";
 		}
-		public function onKeyBoardEvent(e:KeyboardEvent){
+		public function onKeyBoardEvent(e:KeyboardEvent):void{
 			this.c.dispatch(e);
 		}
 	}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2010 lizhnatao(lizhantao@gmail.com)
+ 
+Permission is hereby granted to use, modify, and distribute this file 
+in accordance with the terms of the license agreement accompanying it.
+
+--> 
+<!--- The default skin class for the Spark ComboBox component. 
+The skin for the anchor button for a ComboBox component 
+is defined by the ComboBoxButtonSkin class.  The skin for the text input
+is defined by the ComboBoxTextInputSkin class.
+
+@see spark.components.ComboBox        
+@see spark.skins.spark.ComboBoxButtonSkin
+
+@langversion 3.0
+@playerversion Flash 10
+@playerversion AIR 1.5
+@productversion Flex 4
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+        xmlns:fb="http://ns.adobe.com/flashbuilder/2009" xmlns:mx="library://ns.adobe.com/flex/mx"> 
+    <fx:Metadata>[HostComponent("org.lcf.Overlay")]</fx:Metadata>
+
+	<s:Group left="0" right="0" top="0" bottom="0">
+	    <s:layout>
+			<s:VerticalLayout/>
+		</s:layout>
+		<s:VGroup id="content" width="100%" height="100%">
+			
+		</s:VGroup>
+	</s:Group>
+</s:SparkSkin>
+

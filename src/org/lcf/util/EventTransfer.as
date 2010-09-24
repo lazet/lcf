@@ -1,3 +1,9 @@
+/*
+* Copyright (c) 2010 lizhnatao(lizhantao@gmail.com)
+* 
+* Permission is hereby granted to use, modify, and distribute this file 
+* in accordance with the terms of the license agreement accompanying it.
+*/
 package org.lcf.util
 {
 	import flash.events.Event;
@@ -41,7 +47,7 @@ package org.lcf.util
 		{
 			return events;
 		}
-		public function reDispatchEvent(e:Event){
+		public function reDispatchEvent(e:Event):void{
 			to.dispatch(e);
 		}
 	}

@@ -1,3 +1,9 @@
+/*
+* Copyright (c) 2010 lizhnatao(lizhantao@gmail.com)
+* 
+* Permission is hereby granted to use, modify, and distribute this file 
+* in accordance with the terms of the license agreement accompanying it.
+*/
 package org.lcf
 {
 	import flash.events.Event;
@@ -37,7 +43,7 @@ package org.lcf
 			if(ins is IEventPrefer){
 				var ep:IEventPrefer = ins as IEventPrefer;
 				if(ep.preferEventListeners != null){
-					for(var i = 0; i < ep.preferEventListeners.length; i++){
+					for(var i:int = 0; i < ep.preferEventListeners.length; i++){
 						var o:EventListenerModel = ep.preferEventListeners[i];
 						if(o.eventType != null && o.listener != null){
 							eventDispatcher.addEventListener(o.eventType,o.listener);
@@ -54,7 +60,7 @@ package org.lcf
 			if(ins is IEventPrefer){
 				var ep:IEventPrefer = ins as IEventPrefer;
 				if(ep.preferEventListeners != null){
-					for(var i = 0; i < ep.preferEventListeners.length; i++){
+					for(var i:int = 0; i < ep.preferEventListeners.length; i++){
 						var o:EventListenerModel = ep.preferEventListeners[i];
 						if(o.eventType != null){
 							eventDispatcher.removeEventListener(o.eventType,o.listener);

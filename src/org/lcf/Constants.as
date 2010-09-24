@@ -1,3 +1,9 @@
+/*
+* Copyright (c) 2010 lizhnatao(lizhantao@gmail.com)
+* 
+* Permission is hereby granted to use, modify, and distribute this file 
+* in accordance with the terms of the license agreement accompanying it.
+*/
 package org.lcf
 {
 	public class Constants
@@ -16,6 +22,7 @@ package org.lcf
 
 		
 		static public var TAB_NAVIGATOR:String = "TAB_NAVIGATOR";
-		static public var MODULE_SELF = "MODULE_SELF";
+		static public var OVERLAY:String = "OVERLAY";
+		static public var MODULE_SELF:String = "MODULE_SELF";
 	}
 }
