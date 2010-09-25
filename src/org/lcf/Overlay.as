@@ -353,6 +353,7 @@ package org.lcf
 					module.name = moduleName;
 				}
 				catch(e:Error){}
+				module.container.parentContainer = c;
 				//处理容器的事件交换
 				var cInEventTransfer:EventTransfer = new EventTransfer("to."  + Constants.TAB_NAVIGATOR + ".inEventTransfer" ,this.transferInEvents, module.container, this.c);
 				module.container.put("to." + Constants.TAB_NAVIGATOR + ".inEventTransfer", cInEventTransfer);

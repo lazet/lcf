@@ -20,7 +20,7 @@ package org.lcf
 		protected var eventDispatcher:EventDispatcher;
 		protected var reflector:Reflector = new Reflector();
 		protected var nameClazzMap:Dictionary = new Dictionary();
-		
+		protected var pContainer:IContainer;
 		public function Container()
 		{
 			injector = new Injector();
@@ -28,7 +28,12 @@ package org.lcf
 			injector.mapValue(EventDispatcher,eventDispatcher,Constants.EVENT_DISPATCHER);
 			this.injector.mapValue(IContainer,this,Constants.CONTAINER);
 		}
-		
+		/**
+		 * 指定父容器
+		 */ 
+		public function set parentContainer(parent:IContainer):void{
+			this.pContainer = parent;
+		}
 		public function put(name:String, ins:Object):void
 		{
 			var c:Class = reflector.getClass(ins);
@@ -56,7 +61,7 @@ package org.lcf
 		public function remove(name:String):void
 		{
 			
-			var ins:Object = this.get(name);
+			var ins:Object = this.getInternal(name);
 			if(ins is IEventPrefer){
 				var ep:IEventPrefer = ins as IEventPrefer;
 				if(ep.preferEventListeners != null){
@@ -80,15 +85,22 @@ package org.lcf
 		
 		public function get(name:String):Object
 		{
+			var result:Object = getInternal(name);
+			if(result == null && pContainer != null){
+				return pContainer.get(name);
+			}
+			return null;
+		}
+		protected function getInternal(name:String):Object
+		{
 			try{
 				return injector.getInstance(this.nameClazzMap[name],name);
 			}
 			catch(e:Error){
-				return null;
+				trace(e);
 			}
 			return null;
-		}
-		
+		}	
 		public function dispatch(e:Event):void
 		{
 			this.eventDispatcher.dispatchEvent(e);

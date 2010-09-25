@@ -14,7 +14,10 @@ package org.lcf
 	public interface IContainer
 	{
 		
-		
+		/**
+		 * 指定父容器
+		 */ 
+		function set parentContainer(parent:IContainer):void;
 		/**
 		 *	 将对象放入容器
 		 */
