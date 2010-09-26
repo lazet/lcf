@@ -89,7 +89,7 @@ package org.lcf
 			if(result == null && pContainer != null){
 				return pContainer.get(name);
 			}
-			return null;
+			return result;
 		}
 		protected function getInternal(name:String):Object
 		{
