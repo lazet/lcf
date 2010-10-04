@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" version="3">
   <includeClasses>
-    <classEntry path="org.lcf.AbstractModule"/>
+    <classEntry path="org.lcf.AbstractOuterModule"/>
     <classEntry path="org.lcf.Constants"/>
     <classEntry path="org.lcf.Container"/>
     <classEntry path="org.lcf.IContainer"/>
@@ -18,6 +18,10 @@
     <classEntry path="org.lcf.TabNavigatorSkin"/>
     <classEntry path="org.lcf.util.EventDispatcher"/>
     <classEntry path="org.lcf.util.GeneralBundleEvent"/>
+    <classEntry path="org.lcf.IInnerModule"/>
+    <classEntry path="org.lcf.IOuterModule"/>
+    <classEntry path="org.lcf.AbstractInnerModule"/>
+    <classEntry path="org.lcf.IComponent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

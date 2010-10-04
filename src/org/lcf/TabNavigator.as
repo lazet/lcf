@@ -181,8 +181,11 @@ package org.lcf
 			c.remove(moduleId);
 			//判断是否是真正的模块（继承于IModule)，如果是，则关闭之
 			var mo:Object = tab.moduleObject;
-			if( mo is IModule){
-				var m:IModule = mo as IModule;
+			if( mo is IInnerModule){
+				c.remove(moduleId + ".object");
+			}
+			else if( mo is IOuterModule){
+				var m:IOuterModule = mo as IOuterModule;
 				m.unload();
 				c.remove(Constants.TAB_NAVIGATOR + ".outEventTransfer.to." + moduleId);
 				c.remove("to." + moduleId + ".inEventTransfer");
@@ -430,18 +433,28 @@ package org.lcf
 					module.name = moduleName;
 				}
 				catch(e:Error){}
-				module.container.parentContainer = c;
-				//处理容器的事件交换
-				var cInEventTransfer:EventTransfer = new EventTransfer("to."  + Constants.TAB_NAVIGATOR + ".inEventTransfer" ,this.transferInEvents, module.container, this.c);
-				module.container.put("to." + Constants.TAB_NAVIGATOR + ".inEventTransfer", cInEventTransfer);
-				var cOutEventTransfer:EventTransfer = new EventTransfer(Constants.TAB_NAVIGATOR + ".outEventTransfer.to."+ moduleId ,this.transferOutEvents, this.c, module.container);
-				c.put(Constants.TAB_NAVIGATOR + ".outEventTransfer.to." + moduleId, cOutEventTransfer);
-				
-				//处理模块的事件交换
-				var inEventTransfer:EventTransfer = new EventTransfer("to." + moduleId + ".inEventTransfer" ,module.transferInEvents, this.c, module.container);
-				c.put("to." + moduleId + ".inEventTransfer", inEventTransfer);
-				var outEventTransfer:EventTransfer = new EventTransfer("to."  + Constants.TAB_NAVIGATOR + ".outEventTransfer" ,module.transferOutEvents, module.container, this.c);
-				module.container.put("to."  + Constants.TAB_NAVIGATOR + ".outEventTransfer", outEventTransfer);
+			}
+			if(mo is IInnerModule){
+				var innerModule:IInnerModule = mo as IInnerModule;
+				innerModule.container = c;
+				c.put(moduleId + ".object",innerModule)
+			}
+			else if(mo is IOuterModule){
+				var outerModule:IOuterModule = mo as IOuterModule;
+				if(outerModule.container != null && outerModule.container != c){
+					outerModule.container.parentContainer = c;
+					//处理容器的事件交换
+					var cInEventTransfer:EventTransfer = new EventTransfer("to."  + Constants.TAB_NAVIGATOR + ".inEventTransfer" ,this.transferInEvents, outerModule.container, this.c);
+					outerModule.container.put("to." + Constants.TAB_NAVIGATOR + ".inEventTransfer", cInEventTransfer);
+					var cOutEventTransfer:EventTransfer = new EventTransfer(Constants.TAB_NAVIGATOR + ".outEventTransfer.to."+ moduleId ,this.transferOutEvents, this.c, outerModule.container);
+					c.put(Constants.TAB_NAVIGATOR + ".outEventTransfer.to." + moduleId, cOutEventTransfer);
+					
+					//处理模块的事件交换
+					var inEventTransfer:EventTransfer = new EventTransfer("to." + moduleId + ".inEventTransfer" ,outerModule.transferInEvents, this.c, outerModule.container);
+					c.put("to." + moduleId + ".inEventTransfer", inEventTransfer);
+					var outEventTransfer:EventTransfer = new EventTransfer("to."  + Constants.TAB_NAVIGATOR + ".outEventTransfer" ,outerModule.transferOutEvents, outerModule.container, this.c);
+					outerModule.container.put("to."  + Constants.TAB_NAVIGATOR + ".outEventTransfer", outEventTransfer);
+				}
 			}
 			this.c.put(moduleId,o);
 			this.tabIndexMap[moduleId] = 99;

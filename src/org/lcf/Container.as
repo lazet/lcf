@@ -74,10 +74,11 @@ package org.lcf
 				}
 			}
 			
-			try{	
-				injector.unmap(this.nameClazzMap[name],name);
+			try{
 				this.nameClazzMap[name] = null;
 				delete this.nameClazzMap[name];
+				injector.unmap(this.nameClazzMap[name],name);
+				
 			}catch(err:Error){
 				trace(err);
 			}
