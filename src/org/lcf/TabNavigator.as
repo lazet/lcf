@@ -30,7 +30,7 @@ package org.lcf
 	import mx.utils.ArrayUtil;
 	
 	import org.lcf.IContainer;
-	import org.lcf.IModule;
+	import org.lcf.IOuterModule;
 	import org.lcf.util.EventTransfer;
 	import org.lcf.util.ModuleEvent;
 	import org.lcf.util.Tab;
@@ -49,7 +49,7 @@ package org.lcf
 	/**
 	 * 页签导航
 	 */ 
-	public class TabNavigator extends SkinnableComponent implements IModuleManager,IEventPrefer,IModule
+	public class TabNavigator extends SkinnableComponent implements IModuleManager,IEventPrefer,IOuterModule
 	{	
 		protected var pointer:int = -1;
 		

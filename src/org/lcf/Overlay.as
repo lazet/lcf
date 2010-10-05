@@ -30,7 +30,7 @@ package org.lcf
 	import mx.utils.ArrayUtil;
 	
 	import org.lcf.IContainer;
-	import org.lcf.IModule;
+	import org.lcf.IOuterModule;
 	import org.lcf.util.EventTransfer;
 	import org.lcf.util.ModuleEvent;
 	
@@ -44,7 +44,7 @@ package org.lcf
 	/**
 	 * 页面覆盖方式的导航
 	 */ 
-	public class Overlay extends SkinnableComponent implements IModuleManager,IEventPrefer,IModule
+	public class Overlay extends SkinnableComponent implements IModuleManager,IEventPrefer,IOuterModule
 	{	
 		protected var pointer:int = -1;
 		
