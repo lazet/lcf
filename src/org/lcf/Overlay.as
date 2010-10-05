@@ -247,6 +247,7 @@ package org.lcf
 				this.c.dispatch(new org.lcf.util.ModuleEvent(Constants.MODULE_SELECTED_EVENT,moduleId));
 				
 				this.content.removeAllElements();
+				
 				this.content.addElement(tab.moduleObject);
 				this.content.invalidateDisplayList();
 				this.content.setFocus();
