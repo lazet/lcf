@@ -17,7 +17,7 @@ package org.lcf.util
 		public function get bundle():Object{
 			return _bundle;
 		}
-		public function GeneralBundleEvent(type:String, bundle:Object)
+		public function GeneralBundleEvent(type:String, bundle:Object,bubbles:Boolean=true, cancelable:Boolean=true)
 		{
 			super(type, bubbles, cancelable);
 			this._bundle = bundle;

@@ -17,6 +17,8 @@
   </compiler>
   <applications>
     <application path="Lcf.as"/>
+    <application path="TCPC.mxml"/>
+    <application path="Tpc.mxml"/>
   </applications>
   <modules>
     <module application="src/Lcf.as" destPath="org/lcf/Test1.swf" optimize="true" sourcePath="src/org/lcf/Test1.mxml"/>

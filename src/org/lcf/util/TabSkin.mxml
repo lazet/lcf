@@ -93,7 +93,7 @@ in accordance with the terms of the license agreement accompanying it.
 		<s:layout>
 			<s:HorizontalLayout  gap="1" verticalAlign="middle" />
 		</s:layout>
-		<mx:Image id="iconImage" source="assets/Dog.JPG" width="16" height="16"/>
+		<mx:Image id="iconImage" source="assets/module.jpeg" width="16" height="16"/>
 		<s:Label id="title" minWidth="30" text="" fontSize="14"/>
 		<s:Label id="blank" width="100%" alpha="0"/>	
 		<s:Button id="closeButton" right="1" width="12" height="12" skinClass="org.lcf.util.CloseButtonSkin" toolTip="close"/>
