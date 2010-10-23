@@ -36,6 +36,7 @@ package org.lcf
 		}
 		public function put(name:String, ins:Object):void
 		{
+			this.remove(name);
 			var c:Class = reflector.getClass(ins);
 			if(c == null){
 				c = reflector.getClass({});
