@@ -34,6 +34,12 @@ package org.lcf
 		public function set parentContainer(parent:IContainer):void{
 			this.pContainer = parent;
 		}
+		/**
+		 * 获取父容器
+		 */ 
+		public function get parentContainer():IContainer{
+			return this.pContainer;
+		}
 		public function put(name:String, ins:Object):void
 		{
 			this.remove(name);
@@ -63,6 +69,7 @@ package org.lcf
 		{
 			
 			var ins:Object = this.getInternal(name);
+			if(ins == null)return;
 			if(ins is IEventPrefer){
 				var ep:IEventPrefer = ins as IEventPrefer;
 				if(ep.preferEventListeners != null){
@@ -95,6 +102,8 @@ package org.lcf
 		}
 		protected function getInternal(name:String):Object
 		{
+			if(this.nameClazzMap[name] == null )
+				return null;
 			try{
 				return injector.getInstance(this.nameClazzMap[name],name);
 			}

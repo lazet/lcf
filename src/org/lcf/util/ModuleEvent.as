@@ -22,7 +22,7 @@ package org.lcf.util
 		
 		public var icon:String;
 		
-		public function ModuleEvent(type:String,moduleId:String,moduleName:String = null, moduleInfo:Object = null,closable:Boolean = true, reloadable:Boolean = true,  bubbles:Boolean=false, cancelable:Boolean=false,icon:String = null)
+		public function ModuleEvent(type:String,moduleId:String,moduleName:String = null, moduleInfo:Object = null,closable:Boolean = true, reloadable:Boolean = false,  bubbles:Boolean=false, cancelable:Boolean=false,icon:String = null)
 		{
 			super(type, bubbles, cancelable);
 			this.moduleId = moduleId;

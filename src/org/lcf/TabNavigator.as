@@ -128,18 +128,20 @@ package org.lcf
 		 */ 
 		public function openModule(m:org.lcf.IModule,icon:String=null, reload:Boolean=false, closable:Boolean=true):Boolean
 		{
-			if(reload == false){
-				if(this.c.get(m.id) != null){
-					if(reload == false){
-						this.switchTo(m.id);
-						return true;
-					}else{
-						this.close(m.id);
-					}
+			if(this.c.get(m.id) != null){
+				if(reload == false){
+					this.switchTo(m.id);
+					return true;
+				}else{
+					this.close(m.id);
+					this.add(m.id,m.name,m as IVisualElement,icon,closable);
+					return true;
 				}
 			}
-			this.add(m.id,m.name,m as IVisualElement,icon,closable);
-			return true;
+			else{
+				this.add(m.id,m.name,m as IVisualElement,icon,closable);
+				return true;
+			}
 		}
 		
 		public function close(moduleId:String):Boolean

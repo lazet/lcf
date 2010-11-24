@@ -19,6 +19,10 @@ package org.lcf
 		 */ 
 		function set parentContainer(parent:IContainer):void;
 		/**
+		 * 获得父容器
+		 */ 
+		function get parentContainer():IContainer;
+		/**
 		 *	 将对象放入容器
 		 */
 		function put(name:String, ins:Object):void;
